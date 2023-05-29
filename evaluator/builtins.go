@@ -1,8 +1,21 @@
 package evaluator
 
-import "github.com/jcbbb/monkey/object"
+import (
+	"fmt"
+
+	"github.com/jcbbb/monkey/object"
+)
 
 var builtins = map[string]*object.Builtin{
+	"puts": {
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+
+			return NULL
+		},
+	},
 	"push": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 2 {

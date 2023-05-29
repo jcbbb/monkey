@@ -3,6 +3,7 @@ package object
 import (
 	"bytes"
 	"fmt"
+	"hash/fnv"
 	"strconv"
 	"strings"
 
@@ -21,17 +22,20 @@ const (
 	StringObj
 	BuiltinObj
 	ArrayObj
+	HashObj
 )
 
 var objectTypes = [...]string{
-	IntegerObj: "INTEGER",
-	BooleanObj: "BOOLEAN",
-	NullObj:    "NULL",
-	ReturnObj:  "RETURN",
-	ErrorObj:   "ERROR",
-	StringObj:  "STRING",
-	BuiltinObj: "BUILTIN",
-	ArrayObj:   "ARRAY",
+	IntegerObj:  "INTEGER",
+	BooleanObj:  "BOOLEAN",
+	NullObj:     "NULL",
+	ReturnObj:   "RETURN",
+	ErrorObj:    "ERROR",
+	StringObj:   "STRING",
+	BuiltinObj:  "BUILTIN",
+	ArrayObj:    "ARRAY",
+	HashObj:     "HASH",
+	FunctionObj: "FUNCTION",
 }
 
 func (ot ObjectType) String() string {
@@ -90,6 +94,42 @@ type Array struct {
 	Elements []Object
 }
 
+type HashKey struct {
+	Type  ObjectType
+	Value uint64
+}
+
+type HashPair struct {
+	Key   Object
+	Value Object
+}
+
+type Hash struct {
+	Pairs map[HashKey]HashPair
+}
+
+type Hashable interface {
+	HashKey() HashKey
+}
+
+func (h *Hash) Type() ObjectType { return HashObj }
+func (h *Hash) Inspect() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for _, pair := range h.Pairs {
+		pairs = append(pairs, fmt.Sprintf("%s: %s",
+			pair.Key.Inspect(), pair.Value.Inspect()))
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+
+	return out.String()
+
+}
+
 type BuiltinFunction func(args ...Object) Object
 type Builtin struct {
 	Fn BuiltinFunction
@@ -123,11 +163,25 @@ func (i *Integer) Inspect() string {
 	return fmt.Sprintf("%d", i.Value)
 }
 func (i *Integer) Type() ObjectType { return IntegerObj }
+func (i *Integer) HashKey() HashKey {
+	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
+}
 
 func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
 }
 func (b *Boolean) Type() ObjectType { return BooleanObj }
+func (b *Boolean) HashKey() HashKey {
+	var value uint64
+
+	if b.Value {
+		value = 1
+	} else {
+		value = 0
+	}
+
+	return HashKey{Type: b.Type(), Value: value}
+}
 
 func (n *Null) Inspect() string {
 	return "null"
@@ -168,10 +222,17 @@ func (s *String) Inspect() string {
 	return s.Value
 }
 func (s *String) Type() ObjectType { return StringObj }
+func (s *String) HashKey() HashKey {
+	h := fnv.New64a()
+	h.Write([]byte(s.Value))
+
+	return HashKey{Value: h.Sum64(), Type: s.Type()}
+}
 
 func (bf *Builtin) Inspect() string {
 	return "builtin function"
 }
+
 func (bf *Builtin) Type() ObjectType {
 	return BuiltinObj
 }

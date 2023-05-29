@@ -17,7 +17,6 @@ func New(input string) *Lexer {
 	l.readChar()
 	return l
 }
-
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -35,6 +34,8 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
+	case ':':
+		tok = newToken(token.COLON, l.ch)
 	case '(':
 		tok = newToken(token.LPAREN, l.ch)
 	case ')':

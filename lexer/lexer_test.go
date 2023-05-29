@@ -26,6 +26,7 @@ func TestNextToken(t *testing.T) {
   10 != 9;
   "Hello world!"
   [1, 2];
+  {"foo": "bar"};
   `
 	tests := []struct {
 		expectedKind    token.Kind
@@ -110,6 +111,12 @@ func TestNextToken(t *testing.T) {
 		{token.COMMA, ","},
 		{token.INT, "2"},
 		{token.RBRACKET, "]"},
+		{token.SEMICOLON, ";"},
+		{token.LBRACE, "{"},
+		{token.STRING, "foo"},
+		{token.COLON, ":"},
+		{token.STRING, "bar"},
+		{token.RBRACE, "}"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""}}
 
