@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Monkey</title>
+    <meta name="description" content="Interpreter for Monkey programming language">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/public/main.css">
+  </head>
+  <body>
+    <header class="header">
+      <span class="header__title">Monkey</span>
+      <div class="header__actions">
+        <form id="form" method="POST">
+          <button class="btn">Run</button>
+        </form>
+        <select class="header__select">
+          <option value="hello-world" selected>Hello world</option>
+          <option value="functions">Functions</option>
+        </select>
+      </div>
+    </header>
+    <main>
+      <textarea class="editable" rows="20" name="body" form="form" spellcheck="false">"Hello world!"</textarea>
+      <div class="output"></div>
+    </main>
+    <footer></footer>
+    <script src="/public/main.js"></script>
+  </body>
+</html>

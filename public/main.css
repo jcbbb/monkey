@@ -1,0 +1,105 @@
+:root {
+  --white: 255, 255, 255;
+  --black: 23, 23, 23;
+
+  --neutral-500: 115, 115, 155;
+  --neutral-600: 82, 82, 82;
+  --neutral-700: 64, 64, 64;
+  --neutral-800: 39, 39, 42;
+  --neutral-900: 23, 23, 23;
+
+  --yellowgreen-500: 154, 205, 50;
+  --yellowgreen-600: 137, 184, 44;
+
+  --orangered-500: 255, 69, 0;
+
+  --bg: var(--white);
+  --color: var(--black);
+  --header-bg: var(--neutral-700);
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--black);
+    --color: var(--white);
+  }
+}
+
+@font-face {
+  font-style: normal;
+  font-display: swap;
+  src: url(/public/robotomono-var.woff2) format("woff2-variations");
+  font-family: "Roboto Mono";
+  font-weight: 1 1000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto Mono";
+  background-color: rgb(var(--bg));
+  color: rgb(var(--color));
+}
+
+.header {
+  background-color: rgb(var(--header-bg));
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__actions {
+  display: flex;
+}
+
+.header__select {
+  margin-left: 1rem;
+}
+
+.editable {
+  outline: none;
+  padding: 0.5rem;
+  width: 100%;
+  background: rgb(var(--bg));
+  border: none;
+  color: rgb(var(--color));
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: "Roboto Mono";
+  height: 100%;
+}
+
+.output {
+  --color: var(--yellowgreen-500);
+  padding: 0.5rem;
+  position: fixed;
+  bottom: 0;
+  min-height: 12rem;
+  background: rgb(var(--header-bg));
+  width: 100%;
+  color: rgb(var(--color));
+}
+
+.output.error {
+  --color: var(--orangered-500);
+}
+
+.btn {
+  --bg: var(--yellowgreen-500);
+  padding: 0.5rem 1.2rem;
+  background: rgb(var(--bg));
+  font-weight: 500;
+  border: none;
+  border-radius: 2px;
+  transition: 200ms ease-in-out;
+}
+
+.btn:hover {
+  --bg: var(--yellowgreen-600);
+}
