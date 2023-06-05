@@ -56,7 +56,13 @@ func handleRun(w http.ResponseWriter, r *http.Request) {
 	result := evaluator.Eval(program, env)
 
 	if result != nil {
-		w.WriteHeader(200)
+		_, ok := result.(*object.Error)
+		if ok {
+			w.WriteHeader(400)
+		} else {
+			w.WriteHeader(200)
+		}
+
 		w.Write([]byte(result.Inspect()))
 		return
 	}

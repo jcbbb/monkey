@@ -72,14 +72,12 @@ body {
   font-size: 1rem;
   font-weight: 400;
   font-family: "Roboto Mono";
-  height: 100%;
+  height: calc(100vh - 16rem);
 }
 
 .output {
   --color: var(--yellowgreen-500);
   padding: 0.5rem;
-  position: fixed;
-  bottom: 0;
   min-height: 12rem;
   background: rgb(var(--header-bg));
   width: 100%;
