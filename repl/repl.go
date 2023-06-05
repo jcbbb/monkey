@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os/user"
 
 	"github.com/jcbbb/monkey/evaluator"
 	"github.com/jcbbb/monkey/lexer"
@@ -28,6 +29,14 @@ const MONKEY_FACE = `            __,__
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
+	user, err := user.Current()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Fprintf(out, "Hello %s! This is the Monkey programming language!\n", user.Username)
+	fmt.Fprintf(out, "Feel free to type in commands\n")
 
 	for {
 		fmt.Fprintf(out, PROMPT)

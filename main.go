@@ -1,21 +1,33 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os/user"
+	"os"
 
+	"github.com/jcbbb/monkey/repl"
 	"github.com/jcbbb/monkey/www"
 )
 
 func main() {
-	user, err := user.Current()
+	replCmd := flag.NewFlagSet("repl", flag.ExitOnError)
 
-	if err != nil {
-		panic(err)
+	serverCmd := flag.NewFlagSet("server", flag.ExitOnError)
+	addr := serverCmd.String("addr", ":3000", "port to listen")
+
+	if len(os.Args) < 2 {
+		fmt.Println("expected either `repl` or `server` subcommand")
 	}
 
-	fmt.Printf("Hello %s! This is the Monkey programming language!\n", user.Username)
-	fmt.Printf("Feel free to type in commands\n")
-	//repl.Start(os.Stdin, os.Stdout)
-	www.Start(0)
+	switch os.Args[1] {
+	case "server":
+		serverCmd.Parse(os.Args[2:])
+		www.Start(*addr)
+	case "repl":
+		replCmd.Parse(os.Args[2:])
+		repl.Start(os.Stdin, os.Stdout)
+	default:
+		fmt.Println("expected either `repl` or `server` subcommand")
+		os.Exit(1)
+	}
 }

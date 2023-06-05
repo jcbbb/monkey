@@ -1,6 +1,7 @@
 package www
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -14,10 +15,13 @@ import (
 	"github.com/jcbbb/monkey/parser"
 )
 
+//go:embed index.html
+var tmpl embed.FS
+
 type handlerFunc func(r *http.Request, w http.ResponseWriter) error
 
 func handleHomeView(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("www/index.html")
+	tmpl, err := template.ParseFS(tmpl, "index.html")
 	if err != nil {
 		w.WriteHeader(400)
 		w.Write([]byte(err.Error()))
@@ -58,7 +62,7 @@ func handleRun(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Start(port uint8) {
+func Start(addr string) {
 	fs := http.FileServer(http.Dir("./public"))
 
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
@@ -78,5 +82,6 @@ func Start(port uint8) {
 		}
 	})
 
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	fmt.Println("Server starting at: ", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
