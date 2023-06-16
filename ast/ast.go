@@ -110,6 +110,12 @@ type IndexExpression struct {
 	Index Expression
 }
 
+type DotExpression struct {
+	Token token.Token
+	Left  Expression
+	Key   string
+}
+
 type HashLiteral struct {
 	Token token.Token
 	Pairs map[Expression]Expression
@@ -316,6 +322,18 @@ func (ie *IndexExpression) String() string {
 	out.WriteString("[")
 	out.WriteString(ie.Index.String())
 	out.WriteString("])")
+
+	return out.String()
+}
+
+func (de *DotExpression) expressionNode()      {}
+func (de *DotExpression) TokenLiteral() string { return de.Token.Literal }
+func (ie *DotExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ie.Left.String())
+	out.WriteString(".")
+	out.WriteString(ie.Key)
 
 	return out.String()
 }

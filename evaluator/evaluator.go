@@ -59,6 +59,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return index
 		}
 		return evalIndexExpression(left, index)
+	case *ast.DotExpression:
+		left := Eval(node.Left, env)
+		if isError(left) {
+			return left
+		}
+		key := &object.String{Value: node.Key}
+		return evalDotExpression(left, key)
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 	case *ast.Identifier:
@@ -183,7 +190,16 @@ func evalIndexExpression(left, index object.Object) object.Object {
 	}
 }
 
-func evalHashIndexExpression(hash, index object.Object) object.Object {
+func evalDotExpression(left, key object.Object) object.Object {
+	switch {
+	case left.Type() == object.HashObj && key.Type() == object.StringObj:
+		return evalHashIndexExpression(left, key)
+	default:
+		return newError("dot operator not supported: %s", left.Type())
+	}
+}
+
+func evalHashIndexExpression(hash object.Object, index object.Object) object.Object {
 	hashObject := hash.(*object.Hash)
 
 	key, ok := index.(object.Hashable)

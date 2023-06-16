@@ -36,6 +36,7 @@ const (
 	LBRACKET
 	RBRACKET
 	COLON
+	DOT
 )
 
 var kinds = [...]string{
@@ -70,6 +71,7 @@ var kinds = [...]string{
 	LBRACKET:  "LBRACKET",
 	RBRACKET:  "RBRACKET",
 	COLON:     "COLON",
+	DOT:       "DOT",
 }
 
 func (k Kind) String() string {

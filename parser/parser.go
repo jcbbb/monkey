@@ -37,6 +37,7 @@ var precedences = map[token.Kind]int{
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
+	token.DOT:      INDEX,
 }
 
 type Parser struct {
@@ -84,6 +85,7 @@ func New(l *lexer.Lexer, trace bool) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
+	p.registerInfix(token.DOT, p.parseDotExpression)
 
 	return p
 }
@@ -198,6 +200,18 @@ func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
 	if !p.expectPeek(token.RBRACKET) {
 		return nil
 	}
+
+	return exp
+}
+
+func (p *Parser) parseDotExpression(left ast.Expression) ast.Expression {
+	exp := &ast.DotExpression{Token: p.curToken, Left: left}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	exp.Key = p.curToken.Literal
 
 	return exp
 }
