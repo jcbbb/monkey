@@ -106,6 +106,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 func applyFunction(fn object.Object, args []object.Object) object.Object {
 	switch fn := fn.(type) {
 	case *object.Function:
+		if len(args) != len(fn.Parameters) {
+			return newError("Insufficient arguments to %s. expected=%d, got=%d", fn.Type(), len(fn.Parameters), len(args))
+		}
+
 		extendedEnv := extendFunctionEnv(fn, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
