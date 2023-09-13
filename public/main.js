@@ -3,9 +3,54 @@ let form = document.getElementById("form")
 let select = document.querySelector(".header__select");
 let editable = document.querySelector(".editable")
 
+// let add = fn(a, b) {
+//   return a + b;
+// };
+
+// let multiply = fn(a, b) {
+//   return a * b;
+// };
+
+// let sum = fn(xs) {
+//   let head = first(xs);
+//   if (!head) return;
+// }
+
+// let numberMap = {"thirty": 30};
+
+// let array = [10, 90, 200];
+
+// multiply(add(add(34, 35), numberMap.thirty), len(array));
+
 let examples = {
   "hello-world": `"Hello world!";`,
-  "functions": `let add = fn(a, b) {\n  return a + b;\n};\n\nadd(34, 35);\n`,
+  "functions": `let add = fn(a, b) {
+  return a + b;
+};
+
+let multiply = fn(a, b) {
+  return a * b;
+};
+
+let hashmap = { "two": 2 };
+let array = [10, 90, 200];
+
+let double = fn(x) { multiply(x, hashmap.two) };
+
+let map = fn(arr, f) {
+  let iter = fn(arr, acc) {
+    if (len(arr) == 0) {
+      acc
+    } else {
+      iter(rest(arr), push(acc, f(first(arr))))
+    }
+  };
+
+  iter(arr, [])
+};
+
+map(array, double);
+`
 }
 
 select?.addEventListener("change", (e) => {
